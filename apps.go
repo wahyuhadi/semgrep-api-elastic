@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"semgrep-to-elastic/models"
@@ -30,21 +31,20 @@ func main() {
 			gologger.Info().Str("Error", "parsing to models").Msg("Failed parsing to models")
 			continue
 		}
-
 		if len(semgrepJson.Results) == 0 {
 			gologger.Info().Str("Info", "No Issue Found").Msg("Yeayyyy, No issue found in this repo")
 			continue
 		}
-
 		for _, data := range semgrepJson.Results {
 			line := fmt.Sprintf("%s -> %s:%v:%v ", *repo, data.Path, data.Start.Col, data.Start.Line)
-			msg := fmt.Sprintf("[%s]  [%s] -> %s ", data.CheckID, data.Extra.Severity, line)
-			gologger.Info().Str("Warning", "Issue Found").Msg(msg)
+			position := fmt.Sprintf("[%s]  [%s] -> %s ", data.CheckID, data.Extra.Severity, line)
+			log.Println(position)
+			log.Println(data.Extra.Lines)
+			fmt.Println("=======================================================")
 			if data.Extra.Severity == "WARNING" {
 				isBlocker = true
 			}
 		}
-
 		for _, data := range semgrepJson.Results {
 			data.RepoURI = *repo
 			postBody, _ := json.Marshal(data)
