@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"os"
 	"semgrep-to-elastic/models"
-	"strings"
 
 	"github.com/projectdiscovery/gologger"
 )
@@ -38,8 +37,7 @@ func main() {
 		}
 
 		for _, data := range semgrepJson.Results {
-			repo_name := strings.Split(*repo, "@")
-			line := fmt.Sprintf("%s -> %s:%v:%v ", repo_name[1], data.Path, data.Start.Col, data.Start.Line)
+			line := fmt.Sprintf("%s -> %s:%v:%v ", *repo, data.Path, data.Start.Col, data.Start.Line)
 			msg := fmt.Sprintf("[%s]  [%s] -> %s ", data.CheckID, data.Extra.Severity, line)
 			gologger.Info().Str("Warning", "Issue Found").Msg(msg)
 			if data.Extra.Severity == "WARNING" {
