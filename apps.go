@@ -17,7 +17,7 @@ import (
 var (
 	Blocker = false
 	repo    = flag.String("r", "https://gitlab-ci-token:[MASKED]@unknow", "repo name")
-	URI     = "http://127.0.0.1:8080" // API
+	URI     = os.Getenv("SEMGREP_API_URI") // API
 )
 
 func main() {
@@ -48,8 +48,7 @@ func main() {
 		}
 
 		for _, data := range semgrepJson.Results {
-			repo_name := strings.Split(*repo, "@")
-			data.RepoURI = repo_name[1]
+			data.RepoURI = *repo
 			postBody, _ := json.Marshal(data)
 			responseBody := bytes.NewBuffer(postBody)
 			//Leverage Go's HTTP Post function to make request
