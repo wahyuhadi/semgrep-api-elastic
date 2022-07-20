@@ -16,7 +16,7 @@ import (
 var (
 	Blocker = false
 	repo    = flag.String("r", "https://gitlab-ci-token:[MASKED]@unknow", "repo name")
-	URI     = os.Getenv("SEMGREP_API_URI") // API
+	URI     = flag.String("h", "https://gitlab-ci-token:[MASKED]@unknow", "API")
 )
 
 func main() {
@@ -50,7 +50,7 @@ func main() {
 			postBody, _ := json.Marshal(data)
 			responseBody := bytes.NewBuffer(postBody)
 			//Leverage Go's HTTP Post function to make request
-			resp, err := http.Post(URI, "application/json", responseBody)
+			resp, err := http.Post(*URI, "application/json", responseBody)
 			//Handle Error
 			if err != nil {
 				gologger.Info().Str("Warning", "Cant connect to api").Msg(err.Error())
