@@ -15,7 +15,7 @@ import (
 )
 
 var (
-	Blocker = false
+	Blocker = flag.Bool("b", false, "block")
 	repo    = flag.String("r", "https://gitlab-ci-token:[MASKED]@unknow", "repo name")
 	URI     = flag.String("h", "https://gitlab-ci-token:[MASKED]@unknow", "API")
 )
@@ -64,7 +64,7 @@ func main() {
 	}
 
 	if isBlocker {
-		if Blocker {
+		if *Blocker {
 			gologger.Error().Str("Warning", "Issue must fix").Msg("[!] You must fixing this issue !!!")
 			os.Exit(1)
 		}
